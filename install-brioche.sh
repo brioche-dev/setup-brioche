@@ -27,7 +27,6 @@ function install_brioche() {
             case "$(uname -m)" in
                 x86_64)
                     brioche_url="https://releases.brioche.dev/$version/x86_64-linux/brioche"
-                    checksum="3aaa66138a595fec42e656a93f9ae4c65d29af8825d665992ca553ff38240692"
                     ;;
                 *)
                     echo "::error::Sorry, Brioche isn't currently supported on your architecture"
@@ -54,11 +53,6 @@ function install_brioche() {
     echo "Downloading from $brioche_url"
     curl --proto '=https' --tlsv1.2 -fL "$brioche_url" -o "$brioche_temp/brioche"
     echo "Download complete"
-    echo "::endgroup::"
-
-    echo "::group::Validating checksum"
-    echo "$checksum  $brioche_temp/brioche" | sha256sum -c -
-    echo "Checksum validation complete"
     echo "::endgroup::"
 
     echo "::group::Installing Brioche"
