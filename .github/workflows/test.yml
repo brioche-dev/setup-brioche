@@ -1,0 +1,24 @@
+name: Test Brioche Setup
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup-brioche:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Brioche
+        uses: brioche-dev/setup-brioche@v1
+        with:
+          version: 'v0.1.3'  # Optional, defaults to v0.1.3
+
+      - name: Verify Brioche installation
+        run: brioche --version  # Verifies that Brioche is available in the PATH

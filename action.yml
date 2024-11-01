@@ -1,0 +1,19 @@
+name: 'Setup Brioche'
+description: 'GitHub Action to install Brioche on a runner'
+author: 'brioche-dev'
+inputs:
+  version:
+    description: 'Version of Brioche to install'
+    required: false
+    default: 'v0.1.3'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Brioche
+      shell: bash
+      run: |
+        chmod +x $GITHUB_ACTION_PATH/install-brioche.sh
+        $GITHUB_ACTION_PATH/install-brioche.sh ${{ inputs.version }}
+      
+    - name: Add Brioche to PATH
+      run: echo "$HOME/.local/bin" >> $GITHUB_PATH
