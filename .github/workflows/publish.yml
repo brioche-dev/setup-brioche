@@ -14,7 +14,7 @@ jobs:
       - name: Determine versions
         id: versions
         run: |
-          echo "major-version=v$(cat VERSION)" >> "$GITHUB_OUTPUT"
+          echo "major-version=v$(cat VERSION | cut -f1 -d.)" >> "$GITHUB_OUTPUT"
 
       - name: Debug versions
         run: |
