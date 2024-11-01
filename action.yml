@@ -9,7 +9,7 @@ inputs:
   install-dir:
     description: 'Directory where Brioche should be installed'
     required: false
-    default: '${{ github.home }}/.local/bin'
+    default: '$HOME/.local/bin'
 runs:
   using: 'composite'
   steps:
@@ -17,8 +17,8 @@ runs:
       shell: bash
       run: |
         chmod +x $GITHUB_ACTION_PATH/install-brioche.sh
-        $GITHUB_ACTION_PATH/install-brioche.sh '${{ inputs.install-dir }}' ${{ inputs.version }}
+        $GITHUB_ACTION_PATH/install-brioche.sh "${{ inputs.install-dir }}" ${{ inputs.version }}
       
     - name: Add Brioche to PATH
       shell: bash
-      run: echo '${{ inputs.install-dir }}' >> $GITHUB_PATH
+      run: echo "${{ inputs.install-dir }}" >> $GITHUB_PATH
