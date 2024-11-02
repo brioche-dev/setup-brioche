@@ -41,7 +41,7 @@ This Action runs a shell script that:
 
 1. Downloads the specified version of Brioche based on the runner's OS and architecture.
 2. Installs Brioche into the install directory (defaults to `$HOME/.local/bin`).
-4. Updates `$PATH` so Brioche and any installed packages are available in subsequent steps.
+3. Updates `$PATH` so Brioche and any installed packages are available in subsequent steps.
 
 ### Example Workflow
 
