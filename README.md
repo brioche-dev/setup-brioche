@@ -63,17 +63,17 @@ jobs:
 
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
-        with:
-          version: 'v0.1.3' # Optional
-          install-dir: '$HOME/custom/install/path' # Optional
+        # with:
+        #   version: 'v0.1.3' # Optional
+        #   install-dir: '$HOME/custom/install/path' # Optional
 
-      - name: Install Dependencies
+      - name: Build package
+        run: brioche build -o output
+
+      - name: Install "Hello world"
         run: |
-          brioche install my-package
-          brioche update
-
-      - name: Run Build Script
-        run: ./build.sh
+          brioche install -r hello_world
+          hello-world
 ```
 
 ## Logs and Debugging
