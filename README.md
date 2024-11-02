@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
