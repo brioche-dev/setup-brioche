@@ -7,6 +7,7 @@ set -euo pipefail
 # Validate environment variables
 if [ -z "${HOME:-}" ]; then
     echo '::error::$HOME must be set'
+    exit 1
 fi
 if [ -z "${install_dir:-}" -o -z "${version:-}" ]; then
     echo '::error::$install_dir and $version must be set'
@@ -14,11 +15,12 @@ if [ -z "${install_dir:-}" -o -z "${version:-}" ]; then
 fi
 if [ -z "${GITHUB_PATH:-}" ]; then
     echo '::error::$GITHUB_PATH not set! This script should be run in GitHub Actions'
+    exit 1
 fi
 
 # If `install_dir` contains a `$` character, then try to expand env vars
 case "$install_dir" in
-    *'$'* );
+    *'$'* )
         # Ensure the `envsubst` command exists
         if ! type envsubst >/dev/null; then
             echo '::error::envsubst is required to expand env vars in $install_dir'
