@@ -91,7 +91,7 @@ echo '::group::Updating $PATH'
 
 # Add Brioche's install directory, plus the installation directory for
 # installed packages
-new_paths=("$install_dir" "$HOME/.local/share/brioche/installed")
+new_paths=("$install_dir" "$HOME/.local/share/brioche/installed/bin")
 for new_path in "${new_paths[@]}"; do
     echo "$new_path" >> "$GITHUB_PATH"
     echo "Added to \$PATH: $new_path"
