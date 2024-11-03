@@ -1,6 +1,6 @@
 name: Test Brioche Setup
 
-on: 
+on:
   push:
     branches:
       - main
@@ -21,4 +21,7 @@ jobs:
           version: 'v0.1.3'  # Optional, defaults to v0.1.3
 
       - name: Verify Brioche installation
-        run: brioche --version  # Verifies that Brioche is available in the PATH
+        run: |
+          brioche --version
+          brioche install -r hello_world
+          hello-world

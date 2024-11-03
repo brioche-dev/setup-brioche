@@ -16,9 +16,7 @@ runs:
     - name: Install Brioche
       shell: bash
       run: |
-        chmod +x $GITHUB_ACTION_PATH/install-brioche.sh
-        $GITHUB_ACTION_PATH/install-brioche.sh "${{ inputs.install-dir }}" ${{ inputs.version }}
-      
-    - name: Add Brioche to PATH
-      shell: bash
-      run: echo "${{ inputs.install-dir }}" >> $GITHUB_PATH
+        "$GITHUB_ACTION_PATH"/install-brioche.sh
+      env:
+        install_dir: ${{ inputs.install-dir }}
+        version: ${{ inputs.version }}

@@ -2,7 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/brioche-dev/setup-brioche) ![GitHub](https://img.shields.io/github/license/brioche-dev/setup-brioche)
 
-A GitHub Action to install [Brioche](https://brioche.dev/), a package manager designed for developers seeking efficient, streamlined software installation and dependency management.
+Official GitHub Action to install [Brioche](https://brioche.dev/), a delicious package manager.
 
 ## Overview
 
@@ -32,17 +32,16 @@ jobs:
 
 ## Inputs
 
-- `version`: (Optional) The version of Brioche to install. Defaults to `v0.1.3`.
-- `install-dir`: (Optional) The directory where Brioche should be installed. Defaults to `${{ github.home }}/.local/bin`.
+- `version`: (Optional) The version of Brioche to install. Defaults to `v0.1.3` (the latest version).
+- `install-dir`: (Optional) The directory where Brioche should be installed. Defaults to `$HOME/.local/bin`.
 
 ## How It Works
 
 This Action runs a shell script that:
 
 1. Downloads the specified version of Brioche based on the runner's OS and architecture.
-2. Verifies the integrity of the download using a SHA-256 checksum.
-3. Installs Brioche into the specified or default directory.
-4. Adds the install directory to the `PATH` for use in subsequent steps.
+2. Installs Brioche into the install directory (defaults to `$HOME/.local/bin`).
+3. Updates `$PATH` so Brioche and any installed packages are available in subsequent steps.
 
 ### Example Workflow
 
@@ -60,21 +59,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
-        with:
-          version: 'v0.1.3'
-          install-dir: '/custom/install/path'  # Optional, specify if needed
+        # with:
+        #   version: 'v0.1.3' # Optional
+        #   install-dir: '$HOME/custom/install/path' # Optional
 
-      - name: Install Dependencies
+      - name: Build package
+        run: brioche build -o output
+
+      - name: Install "Hello world"
         run: |
-          brioche install my-package
-          brioche update
-
-      - name: Run Build Script
-        run: ./build.sh
+          brioche install -r hello_world
+          hello-world
 ```
 
 ## Logs and Debugging
