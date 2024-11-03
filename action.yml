@@ -15,7 +15,8 @@ runs:
   steps:
     - name: Install Brioche
       shell: bash
-      run: "$GITHUB_ACTION_PATH"/install-brioche.sh
+      run: |
+        "$GITHUB_ACTION_PATH"/install-brioche.sh
       env:
         install_dir: ${{ inputs.install_dir }}
         version: ${{ inputs.version }}
