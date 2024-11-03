@@ -18,5 +18,5 @@ runs:
       run: |
         "$GITHUB_ACTION_PATH"/install-brioche.sh
       env:
-        install_dir: ${{ inputs.install_dir }}
+        install_dir: ${{ inputs.install-dir }}
         version: ${{ inputs.version }}
