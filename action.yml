@@ -1,6 +1,9 @@
 name: 'Setup Brioche'
 description: 'GitHub Action to install Brioche on the runner'
 author: 'brioche-dev'
+branding:
+  color: 'orange'
+  icon: 'box'
 inputs:
   version:
     description: 'Version of Brioche to install'
