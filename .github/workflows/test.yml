@@ -9,8 +9,14 @@ on:
       - main
 
 jobs:
-  setup-brioche:
-    runs-on: ubuntu-latest
+  test-setup-brioche:
+    strategy:
+      matrix:
+        runs-on:
+          - ubuntu-22.04
+          - ubuntu-24.04
+          - ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
