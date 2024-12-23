@@ -34,6 +34,7 @@ jobs:
 
 - `version`: (Optional) The version of Brioche to install. Defaults to `v0.1.3` (the latest version).
 - `install-dir`: (Optional) The directory where Brioche should be installed. Defaults to `$HOME/.local/bin`.
+- `install-apparmor`: (Optional) Enable or disable installation of an AppArmor profile for Brioche. Defaults to `auto`, which will automatically install it if required (e.g. on Ubuntu 24.04).
 
 ## How It Works
 
