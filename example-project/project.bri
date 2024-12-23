@@ -1,0 +1,13 @@
+import * as std from "std";
+import helloWorld from "hello_world";
+
+// Replaced with a timestamp to ensure the build can't be cached
+const WATERMARK_VALUE = "${WATERMARK}";
+
+export default function () {
+  return std.runBash`
+    hello-world | tee "$BRIOCHE_OUTPUT"
+  `
+    .env({ WATERMARK_VALUE })
+    .dependencies(helloWorld());
+}

@@ -24,10 +24,14 @@ jobs:
       - name: Setup Brioche
         uses: ./ # Uses an action in the root directory
         with:
-          version: 'v0.1.3'  # Optional, defaults to v0.1.3
+          version: 'v0.1.3' # Optional, defaults to v0.1.3
 
       - name: Verify Brioche installation
         run: |
           brioche --version
           brioche install -r hello_world
           hello-world
+
+          WATERMARK="$(date -uIs)"
+          sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
+          brioche build -p example-project -o output
