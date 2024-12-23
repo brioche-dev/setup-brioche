@@ -13,6 +13,10 @@ inputs:
     description: 'Directory where Brioche should be installed'
     required: false
     default: '$HOME/.local/bin'
+  install-apparmor:
+    description: "Install AppArmor profile for Brioche. Defaults to 'auto'"
+    required: false
+    default: 'auto'
 runs:
   using: 'composite'
   steps:
@@ -23,3 +27,4 @@ runs:
       env:
         install_dir: ${{ inputs.install-dir }}
         version: ${{ inputs.version }}
+        install_apparmor: ${{ inputs.install-apparmor }}
