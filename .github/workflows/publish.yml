@@ -16,11 +16,13 @@ jobs:
         run: |
           full_version="$(cat VERSION)"
           major_version="$(echo "$full_version" | cut -f1 -d.)"
-          echo "full-version=$full_version" >> "$GITHUB_OUTPUT"
-          echo "major-version=$major_version" >> "$GITHUB_OUTPUT"
+          echo "full-version=$full_version" | tee -a "$GITHUB_OUTPUT"
+          echo "major-version=$major_version" | tee -a "$GITHUB_OUTPUT"
       - name: Update versions
         run: |
-          echo "Full version: $full_version"
-          echo "Major version: $major_version"
+          echo "Pushing tag $major_version"
           git tag -f "$major_version"
           git push -f origin "$major_version"
+        env:
+          full_version: ${{ steps.versions.outputs.full-version }}
+          major_version: ${{ steps.versions.outputs.major-version }}
