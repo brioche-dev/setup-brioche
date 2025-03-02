@@ -14,9 +14,7 @@ jobs:
       - name: Determine versions
         id: versions
         run: |
-          full_version="$(cat VERSION)"
-          major_version="$(echo "$full_version" | cut -f1 -d.)"
-          echo "full-version=$full_version" | tee -a "$GITHUB_OUTPUT"
+          major_version="$(cat VERSION | cut -f1 -d.)"
           echo "major-version=$major_version" | tee -a "$GITHUB_OUTPUT"
       - name: Update versions
         run: |
@@ -24,5 +22,4 @@ jobs:
           git tag -f "$major_version"
           git push -f origin "$major_version"
         env:
-          full_version: ${{ steps.versions.outputs.full-version }}
           major_version: ${{ steps.versions.outputs.major-version }}
