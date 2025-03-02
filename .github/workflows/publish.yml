@@ -20,9 +20,9 @@ jobs:
           echo "major-version=$major_version" | tee -a "$GITHUB_OUTPUT"
       - name: Update versions
         run: |
-          echo "Pushing tag $major_version"
-          git tag -f "$major_version"
-          git push -f origin "$major_version"
+          echo "Pushing tag v${major_version}"
+          git tag -f "v${major_version}"
+          git push -f origin "v${major_version}"
         env:
           full_version: ${{ steps.versions.outputs.full-version }}
           major_version: ${{ steps.versions.outputs.major-version }}
