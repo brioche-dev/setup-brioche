@@ -23,8 +23,6 @@ jobs:
 
       - name: Setup Brioche
         uses: ./ # Uses an action in the root directory
-        with:
-          version: 'v0.1.3' # Optional, defaults to v0.1.3
 
       - name: Verify Brioche installation
         run: |
