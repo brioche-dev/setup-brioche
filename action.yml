@@ -8,7 +8,7 @@ inputs:
   version:
     description: 'Version of Brioche to install'
     required: false
-    default: 'v0.1.4'
+    default: 'v0.1.5'
   install-dir:
     description: 'Directory where Brioche should be installed'
     required: false

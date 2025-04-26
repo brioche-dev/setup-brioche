@@ -23,7 +23,7 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         with:
-          version: 'v0.1.4'  # Optional, specify a version or use the default (v0.1.4)
+          version: 'v0.1.5'  # Optional, specify a version or use the default (v0.1.5)
           install-dir: '/custom/install/path'  # Optional, specify a custom installation path
 
       - name: Verify Brioche installation
@@ -32,7 +32,7 @@ jobs:
 
 ## Inputs
 
-- `version`: (Optional) The version of Brioche to install. Defaults to `v0.1.4` (the latest version).
+- `version`: (Optional) The version of Brioche to install. Defaults to `v0.1.5` (the latest version).
 - `install-dir`: (Optional) The directory where Brioche should be installed. Defaults to `$HOME/.local/bin`.
 - `install-apparmor`: (Optional) Enable or disable installation of an AppArmor profile for Brioche. Defaults to `auto`, which will automatically install it if required (e.g. on Ubuntu 24.04).
 
@@ -65,7 +65,7 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         # with:
-        #   version: 'v0.1.4' # Optional
+        #   version: 'v0.1.5' # Optional
         #   install-dir: '$HOME/custom/install/path' # Optional
 
       - name: Build package
