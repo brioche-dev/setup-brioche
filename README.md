@@ -65,8 +65,8 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         # with:
-        #   version: 'v0.1.5' # Optional
-        #   install-dir: '$HOME/custom/install/path' # Optional
+        #   version: "v0.1.5" # Optional
+        #   install-dir: "$HOME/custom/install/path" # Optional
 
       - name: Build package
         run: brioche build -o output
