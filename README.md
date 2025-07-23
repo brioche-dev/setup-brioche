@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
@@ -65,8 +65,8 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         # with:
-        #   version: 'v0.1.5' # Optional
-        #   install-dir: '$HOME/custom/install/path' # Optional
+        #   version: "v0.1.5" # Optional
+        #   install-dir: "$HOME/custom/install/path" # Optional
 
       - name: Build package
         run: brioche build -o output

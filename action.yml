@@ -1,24 +1,24 @@
-name: 'Setup Brioche'
-description: 'GitHub Action to install Brioche on the runner'
-author: 'brioche-dev'
+name: "Setup Brioche"
+description: "GitHub Action to install Brioche on the runner"
+author: "brioche-dev"
 branding:
-  color: 'orange'
-  icon: 'box'
+  color: "orange"
+  icon: "box"
 inputs:
   version:
-    description: 'Version of Brioche to install'
+    description: "Version of Brioche to install"
     required: false
-    default: 'v0.1.5'
+    default: "v0.1.5"
   install-dir:
-    description: 'Directory where Brioche should be installed'
+    description: "Directory where Brioche should be installed"
     required: false
-    default: '$HOME/.local/bin'
+    default: "$HOME/.local/bin"
   install-apparmor:
     description: "Install AppArmor profile for Brioche. Defaults to 'auto'"
     required: false
-    default: 'auto'
+    default: "auto"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Install Brioche
       shell: bash
