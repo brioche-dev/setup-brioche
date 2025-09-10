@@ -14,8 +14,24 @@ validate_inputs() {
         echo '::error::$HOME must be set'
         exit 1
     fi
-    if [ -z "${install_dir:-}" -o -z "${version:-}" -o -z "${install_apparmor:-}" ]; then
-        echo '::error::$install_dir, $version, and $install_apparmor must be set'
+    if [ -z "${install_dir:-}" -o -z "${version:-}" -o -z "${channel:-}" -o -z "${install_apparmor:-}" ]; then
+        echo '::error::$install_dir, $version, $channel, and $install_apparmor must be set'
+        exit 1
+    fi
+
+    # Validate channel constraints:
+    # - Only values `stable`, `nightly` are allowed
+    # - `version` and `channel=nightly` can't be used together
+    case "$channel" in
+        stable|nightly)
+            ;;
+        *)
+            echo "::error:channel must be either 'stable' or 'nightly'"
+            exit 1
+            ;;
+    esac
+    if [ "$channel" = "nightly" ] && [ -n "$version" ]; then
+        echo "::error:version and channel=nightly can't be used together"
         exit 1
     fi
 }
@@ -53,13 +69,17 @@ install_brioche() {
     # Get the OS and architecture-specific config, such as download URL and AppArmor config
     case "$OSTYPE" in
         linux*)
-            case "$(uname -m)" in
-                x86_64)
+            case "$(uname -m) $channel" in
+                "x86_64 stable")
                     brioche_url="https://releases.brioche.dev/$version/x86_64-linux/brioche"
+                    ;;
+                "x86_64 nightly")
+                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/x86_64-linux/brioche"
                     ;;
                 *)
                     echo "::error::Sorry, Brioche isn't currently supported on your architecture"
                     echo "  Detected architecture: $(uname -m)"
+                    echo "  Channel: $channel"
                     exit 1
                     ;;
             esac
