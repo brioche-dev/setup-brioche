@@ -76,6 +76,9 @@ install_brioche() {
                 "x86_64 nightly")
                     brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/x86_64-linux/brioche"
                     ;;
+                "aarch64 nightly")
+                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/aarch64-linux/brioche"
+                    ;;
                 *)
                     echo "::error::Sorry, Brioche isn't currently supported on your architecture"
                     echo "  Detected architecture: $(uname -m)"
