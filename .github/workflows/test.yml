@@ -8,8 +8,19 @@ on:
     branches:
       - main
 
+verify-brioche: &verify-brioche
+  name: Verify Brioche installation
+  run: |
+    brioche --version
+    brioche install -r hello_world
+    hello-world
+
+    WATERMARK="$(date -uIs)"
+    sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
+    brioche build -p example-project -o output
+
 jobs:
-  test-setup-brioche:
+  smoke-test-setup-brioche:
     strategy:
       matrix:
         runs-on:
@@ -23,12 +34,41 @@ jobs:
       - name: Setup Brioche
         uses: ./ # Uses an action in the root directory
 
-      - name: Verify Brioche installation
-        run: |
-          brioche --version
-          brioche install -r hello_world
-          hello-world
+      - *verify-brioche
 
-          WATERMARK="$(date -uIs)"
-          sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
-          brioche build -p example-project -o output
+  test-setup-brioche-channel:
+    strategy:
+      matrix:
+        channel:
+          - stable
+          - nightly
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Brioche
+        uses: ./ # Uses an action in the root directory
+        with:
+          channel: ${{ matrix.channel }}
+
+      - *verify-brioche
+
+  # This test can only be run on Brioche nightly as for now
+  test-setup-brioche-arm64-runner:
+    strategy:
+      matrix:
+        runs-on:
+          - ubuntu-latest-arm
+          - ubuntu-latest-arm
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Brioche
+        uses: ./ # Uses an action in the root directory
+        with:
+          channel: nightly
+
+      - *verify-brioche
