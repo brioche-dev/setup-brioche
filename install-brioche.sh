@@ -44,6 +44,7 @@ install_brioche() {
             # Ensure the result is not empty
             if [ -z "$install_dir" ]; then
                 echo '::error:$install_dir expanded to empty string'
+                exit 1
             fi
 
             ;;
@@ -86,6 +87,7 @@ install_brioche() {
                     ;;
                 *)
                     echo "::error::Invalid value for \$install_apparmor: $install_apparmor"
+                    exit 1
                     ;;
             esac
             ;;
