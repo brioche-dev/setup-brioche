@@ -9,6 +9,10 @@ inputs:
     description: "Version of Brioche to install"
     required: false
     default: "v0.1.5"
+  channel:
+    description: "Channel of Brioche to install"
+    required: false
+    default: "stable"
   install-dir:
     description: "Directory where Brioche should be installed"
     required: false
@@ -27,4 +31,5 @@ runs:
       env:
         install_dir: ${{ inputs.install-dir }}
         version: ${{ inputs.version }}
+        channel: ${{ inputs.channel }}
         install_apparmor: ${{ inputs.install-apparmor }}
