@@ -34,13 +34,20 @@ jobs:
           sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
           brioche build -p example-project -o output
 
-  test-setup-brioche-channel:
+  test-setup-brioche:
     strategy:
       matrix:
-        channel:
-          - stable
-          - nightly
-    runs-on: ubuntu-latest
+        include:
+          - runs-on: ubuntu-latest
+            channel: stable
+          - runs-on: ubuntu-latest
+            channel: nightly
+          - runs-on: ubuntu-latest-arm
+            channel: stable
+          - runs-on: ubuntu-latest-arm
+            channel: nightly
+    runs-on: ${{ matrix.runs-on }}
+    continue-on-error: ${{ matrix.runs-on == 'ubuntu-latest-arm' && matrix.channel == 'stable' }} # Brioche stable does not support ARM architecture
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -49,24 +56,5 @@ jobs:
         uses: ./ # Uses an action in the root directory
         with:
           channel: ${{ matrix.channel }}
-
-      - *verify-brioche
-
-  # This test can only be run on Brioche nightly as for now
-  test-setup-brioche-arm64-runner:
-    strategy:
-      matrix:
-        runs-on:
-          - ubuntu-latest-arm
-          - ubuntu-latest-arm
-    runs-on: ${{ matrix.runs-on }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup Brioche
-        uses: ./ # Uses an action in the root directory
-        with:
-          channel: nightly
 
       - *verify-brioche
