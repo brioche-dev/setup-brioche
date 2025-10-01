@@ -8,17 +8,6 @@ on:
     branches:
       - main
 
-verify-brioche: &verify-brioche
-  name: Verify Brioche installation
-  run: |
-    brioche --version
-    brioche install -r hello_world
-    hello-world
-
-    WATERMARK="$(date -uIs)"
-    sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
-    brioche build -p example-project -o output
-
 jobs:
   smoke-test-setup-brioche:
     strategy:
@@ -34,7 +23,16 @@ jobs:
       - name: Setup Brioche
         uses: ./ # Uses an action in the root directory
 
-      - *verify-brioche
+      - &verify-brioche
+        name: Verify Brioche installation
+        run: |
+          brioche --version
+          brioche install -r hello_world
+          hello-world
+
+          WATERMARK="$(date -uIs)"
+          sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
+          brioche build -p example-project -o output
 
   test-setup-brioche-channel:
     strategy:
