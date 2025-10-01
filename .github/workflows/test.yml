@@ -11,6 +11,7 @@ on:
 jobs:
   smoke-test-setup-brioche:
     strategy:
+      fail-fast: false
       matrix:
         runs-on:
           - ubuntu-22.04
@@ -36,6 +37,7 @@ jobs:
 
   test-setup-brioche:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - runs-on: ubuntu-latest
