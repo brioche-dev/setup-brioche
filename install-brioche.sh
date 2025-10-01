@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+LATEST_BRIOCHE_VERSION="v0.1.5"
+
 # Based on the official install script here:
 # https://github.com/brioche-dev/brioche.dev/blob/main/public/install.sh
 
@@ -21,19 +23,25 @@ validate_inputs() {
 
     # Validate channel constraints:
     # - Only values `stable`, `nightly` are allowed
-    # - `version` and `channel=nightly` can't be used together
+    # - `version` and `channel=nightly` can't be used together, except when 'version=latest'
     case "$channel" in
-        stable|nightly)
+        stable)
+            # Ensure 'latest' is replaced with the actual latest version
+            if [ "$version" == "latest" ]; then
+                version=$LATEST_BRIOCHE_VERSION
+            fi
+            ;;
+        nightly)
+            if [ "$version" != "latest" ]; then
+                echo "::error::version and channel=nightly can't be used together"
+                exit 1
+            fi
             ;;
         *)
-            echo "::error:channel must be either 'stable' or 'nightly'"
+            echo "::error::channel must be either 'stable' or 'nightly'"
             exit 1
             ;;
     esac
-    if [ "$channel" = "nightly" ] && [ -n "$version" ]; then
-        echo "::error:version and channel=nightly can't be used together"
-        exit 1
-    fi
 }
 
 install_brioche() {
@@ -49,7 +57,7 @@ install_brioche() {
             # Get each referenced env var, and validate each one is not empty
             envsubst -v "$install_dir" | while read -r env_var; do
                 if [ -z "${!env_var:-}" ]; then
-                    echo "::error:env var \$${env_var} is not set (used in \$install_dir)"
+                    echo "::error::env var \$${env_var} is not set (used in \$install_dir)"
                     exit 1
                 fi
             done
@@ -59,7 +67,7 @@ install_brioche() {
 
             # Ensure the result is not empty
             if [ -z "$install_dir" ]; then
-                echo '::error:$install_dir expanded to empty string'
+                echo '::error::$install_dir expanded to empty string'
                 exit 1
             fi
 

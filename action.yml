@@ -8,7 +8,7 @@ inputs:
   version:
     description: "Version of Brioche to install"
     required: false
-    default: "v0.1.5"
+    default: "latest"
   channel:
     description: "Channel of Brioche to install"
     required: false
