@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+LATEST_BRIOCHE_VERSION="v0.1.5"
+SEMVER_REGEX='^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*))?(?:-(?:(?:[0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?:[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+
 # Based on the official install script here:
 # https://github.com/brioche-dev/brioche.dev/blob/main/public/install.sh
 
@@ -18,6 +21,24 @@ validate_inputs() {
         echo '::error::$install_dir, $version, and $install_apparmor must be set'
         exit 1
     fi
+
+    # Validate version constraints:
+    # - Only semver versions are allowed for version
+    # - Only values `stable`, `nightly` are allowed for release channel
+    case "$version" in
+        v*)
+            if [[ ! $version =~ $SEMVER_REGEX ]]; then
+                echo "::error::version must be a valid semver"
+                exit 1
+            fi
+            ;;
+        stable|nightly)
+            ;;
+        *)
+            echo "::error::version must be either 'stable', 'nightly' or a semver"
+            exit 1
+            ;;
+    esac
 }
 
 install_brioche() {
@@ -33,7 +54,7 @@ install_brioche() {
             # Get each referenced env var, and validate each one is not empty
             envsubst -v "$install_dir" | while read -r env_var; do
                 if [ -z "${!env_var:-}" ]; then
-                    echo "::error:env var \$${env_var} is not set (used in \$install_dir)"
+                    echo "::error::env var \$${env_var} is not set (used in \$install_dir)"
                     exit 1
                 fi
             done
@@ -43,7 +64,7 @@ install_brioche() {
 
             # Ensure the result is not empty
             if [ -z "$install_dir" ]; then
-                echo '::error:$install_dir expanded to empty string'
+                echo '::error::$install_dir expanded to empty string'
                 exit 1
             fi
 
@@ -53,9 +74,19 @@ install_brioche() {
     # Get the OS and architecture-specific config, such as download URL and AppArmor config
     case "$OSTYPE" in
         linux*)
-            case "$(uname -m)" in
-                x86_64)
+            # aarch64 is not currently supported on stable
+            case "$(uname -m) $version" in
+                "x86_64 v"*)
                     brioche_url="https://releases.brioche.dev/$version/x86_64-linux/brioche"
+                    ;;
+                "x86_64 stable")
+                    brioche_url="https://releases.brioche.dev/$LATEST_BRIOCHE_VERSION/x86_64-linux/brioche"
+                    ;;
+                "x86_64 nightly")
+                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/x86_64-linux/brioche"
+                    ;;
+                "aarch64 nightly")
+                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/aarch64-linux/brioche"
                     ;;
                 *)
                     echo "::error::Sorry, Brioche isn't currently supported on your architecture"

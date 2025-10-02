@@ -9,12 +9,14 @@ on:
       - main
 
 jobs:
-  test-setup-brioche:
+  smoke-test-setup-brioche:
     strategy:
+      fail-fast: false
       matrix:
         runs-on:
           - ubuntu-22.04
           - ubuntu-24.04
+          - ubuntu-latest
     runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Checkout repository
@@ -23,7 +25,8 @@ jobs:
       - name: Setup Brioche
         uses: ./ # Uses an action in the root directory
 
-      - name: Verify Brioche installation
+      - &verify-brioche
+        name: Verify Brioche installation
         run: |
           brioche --version
           brioche install -r hello_world
@@ -32,3 +35,28 @@ jobs:
           WATERMARK="$(date -uIs)"
           sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
           brioche build -p example-project -o output
+
+  test-setup-brioche:
+    strategy:
+      fail-fast: false
+      # FIXME: to add stable on ARM architecture once a new release of Brioche is done.
+      # As for now, stable version Brioche stable does not support this architecture
+      matrix:
+        include:
+          - runs-on: ubuntu-24.04
+            version: stable
+          - runs-on: ubuntu-24.04
+            version: nightly
+          - runs-on: ubuntu-24.04-arm
+            version: nightly
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Brioche
+        uses: ./ # Uses an action in the root directory
+        with:
+          version: ${{ matrix.version }}
+
+      - *verify-brioche
