@@ -2,6 +2,7 @@
 set -euo pipefail
 
 LATEST_BRIOCHE_VERSION="v0.1.5"
+SEMVER_REGEX='^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*))?(?:-(?:(?:[0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?:[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
 
 # Based on the official install script here:
 # https://github.com/brioche-dev/brioche.dev/blob/main/public/install.sh
@@ -16,29 +17,25 @@ validate_inputs() {
         echo '::error::$HOME must be set'
         exit 1
     fi
-    if [ -z "${install_dir:-}" -o -z "${version:-}" -o -z "${channel:-}" -o -z "${install_apparmor:-}" ]; then
-        echo '::error::$install_dir, $version, $channel, and $install_apparmor must be set'
+    if [ -z "${install_dir:-}" -o -z "${version:-}" -o -z "${install_apparmor:-}" ]; then
+        echo '::error::$install_dir, $version, and $install_apparmor must be set'
         exit 1
     fi
 
-    # Validate channel constraints:
-    # - Only values `stable`, `nightly` are allowed
-    # - `version` and `channel=nightly` can't be used together, except when 'version=latest'
-    case "$channel" in
-        stable)
-            # Ensure 'latest' is replaced with the actual latest version
-            if [ "$version" == "latest" ]; then
-                version=$LATEST_BRIOCHE_VERSION
-            fi
-            ;;
-        nightly)
-            if [ "$version" != "latest" ]; then
-                echo "::error::version and channel=nightly can't be used together"
+    # Validate version constraints:
+    # - Only semver versions are allowed for version
+    # - Only values `stable`, `nightly` are allowed for release channel
+    case "$version" in
+        v*)
+            if [[ ! $version =~ $SEMVER_REGEX ]]; then
+                echo "::error::version must be a valid semver"
                 exit 1
             fi
             ;;
+        stable|nightly)
+            ;;
         *)
-            echo "::error::channel must be either 'stable' or 'nightly'"
+            echo "::error::version must be either 'stable', 'nightly' or a semver"
             exit 1
             ;;
     esac
@@ -77,9 +74,13 @@ install_brioche() {
     # Get the OS and architecture-specific config, such as download URL and AppArmor config
     case "$OSTYPE" in
         linux*)
-            case "$(uname -m) $channel" in
-                "x86_64 stable")
+            # aarch64 is not currently supported on stable
+            case "$(uname -m) $version" in
+                "x86_64 v"*)
                     brioche_url="https://releases.brioche.dev/$version/x86_64-linux/brioche"
+                    ;;
+                "x86_64 stable")
+                    brioche_url="https://releases.brioche.dev/$LATEST_BRIOCHE_VERSION/x86_64-linux/brioche"
                     ;;
                 "x86_64 nightly")
                     brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/x86_64-linux/brioche"
@@ -90,7 +91,6 @@ install_brioche() {
                 *)
                     echo "::error::Sorry, Brioche isn't currently supported on your architecture"
                     echo "  Detected architecture: $(uname -m)"
-                    echo "  Channel: $channel"
                     exit 1
                     ;;
             esac

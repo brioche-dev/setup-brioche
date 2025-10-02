@@ -16,6 +16,7 @@ jobs:
         runs-on:
           - ubuntu-22.04
           - ubuntu-24.04
+          - ubuntu-latest
     runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Checkout repository
@@ -40,16 +41,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runs-on: ubuntu-latest
-            channel: stable
-          - runs-on: ubuntu-latest
-            channel: nightly
-          - runs-on: ubuntu-latest-arm
-            channel: stable
-          - runs-on: ubuntu-latest-arm
-            channel: nightly
+          - runs-on: ubuntu-24.04
+            version: stable
+          - runs-on: ubuntu-24.04
+            version: nightly
+          - runs-on: ubuntu-24.04-arm
+            version: stable
+          - runs-on: ubuntu-24.04-arm
+            version: nightly
     runs-on: ${{ matrix.runs-on }}
-    continue-on-error: ${{ matrix.runs-on == 'ubuntu-latest-arm' && matrix.channel == 'stable' }} # Brioche stable does not support ARM architecture
+    continue-on-error: ${{ matrix.runs-on == 'ubuntu-24.04-arm' && matrix.version == 'stable' }} # Brioche stable does not support ARM architecture
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -57,6 +58,6 @@ jobs:
       - name: Setup Brioche
         uses: ./ # Uses an action in the root directory
         with:
-          channel: ${{ matrix.channel }}
+          version: ${{ matrix.version }}
 
       - *verify-brioche

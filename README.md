@@ -23,7 +23,7 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         with:
-          version: "v0.1.5"  # Optional, specify a version or use the default (latest)
+          version: "v0.1.5"  # Optional, specify a version or a release channel
           install-dir: '/custom/install/path'  # Optional, specify a custom installation path
 
       - name: Verify Brioche installation
@@ -32,8 +32,7 @@ jobs:
 
 ## Inputs
 
-- `version`: (Optional) The version of Brioche to install. Defaults to `latest`.
-- `channel`: (Optional) The channel to install from (stable or nightly).
+- `version`: (Optional) The version of Brioche to install. It can be either a specific version (`v0.1.5`) or a release channel (`stable`, `nightly`). Defaults to `stable`.
 - `install-dir`: (Optional) The directory where Brioche should be installed. Defaults to `$HOME/.local/bin`.
 - `install-apparmor`: (Optional) Enable or disable installation of an AppArmor profile for Brioche. Defaults to `auto`, which will automatically install it if required (e.g. on Ubuntu 24.04).
 
@@ -66,7 +65,7 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         # with:
-        #   version: "latest" # Optional
+        #   version: "stable" # Optional
         #   install-dir: "$HOME/custom/install/path" # Optional
 
       - name: Build package
@@ -85,7 +84,6 @@ This Action uses GitHub's [logging groups](https://docs.github.com/en/actions/us
 ## Troubleshooting
 
 - Ensure the version specified in the `version` input is valid and available.
-- Ensure `version` is not set when `channel=nightly` is specified.
 - If Brioche isn't recognized in your shell, make sure the install path is correctly set in your environment.
 
 ## License

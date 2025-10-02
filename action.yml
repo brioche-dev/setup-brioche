@@ -6,11 +6,7 @@ branding:
   icon: "box"
 inputs:
   version:
-    description: "Version of Brioche to install"
-    required: false
-    default: "latest"
-  channel:
-    description: "Channel of Brioche to install"
+    description: "Version of Brioche to install. It can be either a specific version ('v0.1.5') or a release channel ('stable', 'nightly'). Defaults to 'stable'"
     required: false
     default: "stable"
   install-dir:
@@ -31,5 +27,4 @@ runs:
       env:
         install_dir: ${{ inputs.install-dir }}
         version: ${{ inputs.version }}
-        channel: ${{ inputs.channel }}
         install_apparmor: ${{ inputs.install-apparmor }}
