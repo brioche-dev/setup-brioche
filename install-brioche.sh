@@ -83,10 +83,10 @@ install_brioche() {
                     brioche_url="https://releases.brioche.dev/$LATEST_BRIOCHE_VERSION/x86_64-linux/brioche"
                     ;;
                 "x86_64 nightly")
-                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/x86_64-linux/brioche"
+                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/brioche-x86_64-linux.tar.xz"
                     ;;
                 "aarch64 nightly")
-                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/aarch64-linux/brioche"
+                    brioche_url="https://development-content.brioche.dev/github.com/brioche-dev/brioche/branches/main/brioche-aarch64-linux.tar.xz"
                     ;;
                 *)
                     echo "::error::Sorry, Brioche isn't currently supported on your architecture"
@@ -143,10 +143,29 @@ install_brioche() {
     echo "::endgroup::"
 
     echo "::group::Installing Brioche"
-    mkdir -p "$install_dir"
-    chmod +x "$brioche_temp/brioche"
-    mv "$brioche_temp/brioche" "$install_dir/brioche"
-    echo "Installation complete! Brioche installed to $install_dir/brioche"
+
+    if [ "$version" = "nightly" ]; then\
+        unpack_dir="$HOME/.local/libexec/brioche"
+
+        rm -rf "$unpack_dir/nightly"
+        mkdir -p "$unpack_dir/nightly"
+        tar -xJf "$brioche_temp/brioche" --strip-components=1 -C "$unpack_dir/nightly"
+
+        ln -sf nightly "$unpack_dir/current"
+
+        symlink_target="$unpack_dir/current/bin/brioche"
+        mkdir -p "$install_dir"
+        ln -sfr "$symlink_target" "$install_dir/brioche"
+
+        echo "Installation complete! Brioche installed to $install_dir/brioche (symlink to $unpack_dir/current/bin/brioche)"
+    else
+        mkdir -p "$install_dir"
+        chmod +x "$brioche_temp/brioche"
+        mv "$brioche_temp/brioche" "$install_dir/brioche"
+
+        echo "Installation complete! Brioche installed to $install_dir/brioche"
+    fi
+
     echo "::endgroup::"
 
     echo '::group::Updating $PATH'
@@ -164,7 +183,8 @@ install_brioche() {
     if [ -n "$should_install_apparmor" ]; then
         echo "::group::Installing AppArmor config"
 
-        export BRIOCHE_INSTALL_PATH="$install_dir/brioche"
+        BRIOCHE_INSTALL_PATH="$(realpath "$install_dir/brioche")"
+        export BRIOCHE_INSTALL_PATH
         cat "$GITHUB_ACTION_PATH/apparmor.d/brioche-gh-actions.tpl" | envsubst | sudo tee /etc/apparmor.d/brioche-gh-actions
         sudo apparmor_parser -r /etc/apparmor.d/brioche-gh-actions
 
