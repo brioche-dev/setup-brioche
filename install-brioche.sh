@@ -183,7 +183,8 @@ install_brioche() {
     if [ -n "$should_install_apparmor" ]; then
         echo "::group::Installing AppArmor config"
 
-        export BRIOCHE_INSTALL_PATH="$install_dir/brioche"
+        BRIOCHE_INSTALL_PATH="$(realpath "$install_dir/brioche")"
+        export BRIOCHE_INSTALL_PATH
         cat "$GITHUB_ACTION_PATH/apparmor.d/brioche-gh-actions.tpl" | envsubst | sudo tee /etc/apparmor.d/brioche-gh-actions
         sudo apparmor_parser -r /etc/apparmor.d/brioche-gh-actions
 
