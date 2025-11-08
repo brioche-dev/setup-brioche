@@ -31,7 +31,7 @@ jobs:
 
 ## Inputs
 
-- `version`: (Optional) The version of Brioche to install. It can be either a specific version (`v0.1.5`) or a release channel (`stable`, `nightly`). Defaults to `stable`.
+- `version`: (Optional) The version of Brioche to install. It can be either a specific version (`v0.1.6`) or a release channel (`stable`, `nightly`). Defaults to `stable`.
 - `install-bin-dir`: (Optional) A directory where a symlink to the current Brioche version will be added. Defaults to '$HOME/.local/bin'.
 - `install-root`: (Optional) The directory where the installer will unpack Brioche versions. Defaults to '$HOME/.local/share/brioche-install'.
 - `install-apparmor`: (Optional) Enable or disable installation of an AppArmor profile for Brioche. Defaults to `auto`, which will automatically install it if required (e.g. on Ubuntu 24.04).

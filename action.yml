@@ -6,7 +6,7 @@ branding:
   icon: "box"
 inputs:
   version:
-    description: "Version of Brioche to install. It can be either a specific version ('v0.1.5') or a release channel ('stable', 'nightly'). Defaults to 'stable'"
+    description: "Version of Brioche to install. It can be either a specific version ('v0.1.6') or a release channel ('stable', 'nightly'). Defaults to 'stable'"
     required: false
     default: "stable"
   install-root:
