@@ -39,11 +39,11 @@ jobs:
   test-setup-brioche:
     strategy:
       fail-fast: false
-      # FIXME: to add stable on ARM architecture once a new release of Brioche is done.
-      # As for now, stable version Brioche stable does not support this architecture
       matrix:
         include:
           - runs-on: ubuntu-24.04
+            version: stable
+          - runs-on: ubuntu-24.04-arm
             version: stable
           - runs-on: ubuntu-24.04
             version: nightly
