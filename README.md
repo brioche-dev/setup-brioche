@@ -1,6 +1,6 @@
 # setup-brioche
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/brioche-dev/setup-brioche) ![GitHub](https://img.shields.io/github/license/brioche-dev/setup-brioche)
+[![Latest release](https://img.shields.io/github/v/release/brioche-dev/setup-brioche)](https://github.com/brioche-dev/setup-brioche/releases/latest)
 
 Official GitHub Action to install [Brioche](https://brioche.dev/), a delicious package manager.
 
@@ -23,8 +23,7 @@ jobs:
       - name: Setup Brioche
         uses: brioche-dev/setup-brioche@v1
         with:
-          version: "v0.1.5"  # Optional, specify a version or a release channel
-          install-dir: '/custom/install/path'  # Optional, specify a custom installation path
+          version: "stable" # Optional, specify a version or a release channel
 
       - name: Verify Brioche installation
         run: brioche --version  # Check that Brioche is available
@@ -33,7 +32,8 @@ jobs:
 ## Inputs
 
 - `version`: (Optional) The version of Brioche to install. It can be either a specific version (`v0.1.5`) or a release channel (`stable`, `nightly`). Defaults to `stable`.
-- `install-dir`: (Optional) The directory where Brioche should be installed. Defaults to `$HOME/.local/bin`.
+- `install-bin-dir`: (Optional) A directory where a symlink to the current Brioche version will be added. Defaults to '$HOME/.local/bin'.
+- `install-root`: (Optional) The directory where the installer will unpack Brioche versions. Defaults to '$HOME/.local/share/brioche-install'.
 - `install-apparmor`: (Optional) Enable or disable installation of an AppArmor profile for Brioche. Defaults to `auto`, which will automatically install it if required (e.g. on Ubuntu 24.04).
 
 ## How It Works
@@ -66,7 +66,8 @@ jobs:
         uses: brioche-dev/setup-brioche@v1
         # with:
         #   version: "stable" # Optional
-        #   install-dir: "$HOME/custom/install/path" # Optional
+        #   install-bin-dir: "$HOME/.local/bin" # Optional
+        #   install-root: "$HOME/.local/share/brioche-install" # Optional
 
       - name: Build package
         run: brioche build -o output
@@ -76,15 +77,6 @@ jobs:
           brioche install -r hello_world
           hello-world
 ```
-
-## Logs and Debugging
-
-This Action uses GitHub's [logging groups](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#grouping-log-lines) to make output more readable. You will see collapsible log groups for stages like downloading, validating, and installing Brioche, making it easier to debug if needed.
-
-## Troubleshooting
-
-- Ensure the version specified in the `version` input is valid and available.
-- If Brioche isn't recognized in your shell, make sure the install path is correctly set in your environment.
 
 ## License
 

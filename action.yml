@@ -9,14 +9,19 @@ inputs:
     description: "Version of Brioche to install. It can be either a specific version ('v0.1.5') or a release channel ('stable', 'nightly'). Defaults to 'stable'"
     required: false
     default: "stable"
-  install-dir:
-    description: "Directory where Brioche should be installed"
+  install-root:
+    description: "Directory where the installer will unpack Brioche versions. Defaults to '$HOME/.local/share/brioche-install'"
     required: false
-    default: "$HOME/.local/bin"
+  install-dir:
+    description: "Directory where a symlink to the current Brioche version will be added. Defaults to '$HOME/.local/bin'"
+    required: false
+    deprecationMessage: "Renamed to `install-bin-dir`"
+  install-bin-dir:
+    description: "Directory where a symlink to the current Brioche version will be added. Defaults to '$HOME/.local/bin'"
+    required: false
   install-apparmor:
     description: "Install AppArmor profile for Brioche. Defaults to 'auto'"
     required: false
-    default: "auto"
 runs:
   using: "composite"
   steps:
@@ -25,6 +30,8 @@ runs:
       run: |
         "$GITHUB_ACTION_PATH"/install-brioche.sh
       env:
+        install_bin_dir: ${{ inputs.install-bin-dir }}
         install_dir: ${{ inputs.install-dir }}
+        install_root: ${{ inputs.install-root }}
         version: ${{ inputs.version }}
         install_apparmor: ${{ inputs.install-apparmor }}
