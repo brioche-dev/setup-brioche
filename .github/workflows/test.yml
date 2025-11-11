@@ -94,3 +94,15 @@ jobs:
           test -d "${{ runner.temp }}/brioche-install/brioche"
 
       - *verify-brioche
+
+  all-tests:
+    name: All tests passed
+    needs:
+      - smoke-test-setup-brioche
+      - test-setup-brioche-with-install-bin-dir-override
+      - test-setup-brioche-with-install-root-override
+      - test-setup-brioche-with-version-override
+    runs-on: ubuntu-24.04
+    steps:
+      - name: All tests passed
+        run: 'true'
