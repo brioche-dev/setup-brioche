@@ -36,14 +36,14 @@ jobs:
           sed -i "s/\${WATERMARK}/${WATERMARK}/g" example-project/project.bri
           brioche build -p example-project -o output
 
-  test-setup-brioche:
+  test-setup-brioche-with-version-override:
     strategy:
       fail-fast: false
-      # FIXME: to add stable on ARM architecture once a new release of Brioche is done.
-      # As for now, stable version Brioche stable does not support this architecture
       matrix:
         include:
           - runs-on: ubuntu-24.04
+            version: stable
+          - runs-on: ubuntu-24.04-arm
             version: stable
           - runs-on: ubuntu-24.04
             version: nightly
@@ -58,5 +58,39 @@ jobs:
         uses: ./ # Uses an action in the root directory
         with:
           version: ${{ matrix.version }}
+
+      - *verify-brioche
+
+  test-setup-brioche-with-install-bin-dir-override:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Brioche
+        uses: ./ # Uses an action in the root directory
+        with:
+          install-bin-dir: ${{ runner.temp }}/brioche-bin
+
+      - name: Verify Brioche location
+        run: |
+          test -f "${{ runner.temp }}/brioche-bin/brioche"
+
+      - *verify-brioche
+
+  test-setup-brioche-with-install-root-override:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Brioche
+        uses: ./ # Uses an action in the root directory
+        with:
+          install-root: ${{ runner.temp }}/brioche-install
+
+      - name: Verify Brioche location
+        run: |
+          test -d "${{ runner.temp }}/brioche-install/brioche"
 
       - *verify-brioche
