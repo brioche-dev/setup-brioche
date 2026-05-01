@@ -63,7 +63,7 @@ export BRIOCHE_INSTALL_CONTEXT='github-actions'
 echo "::group::Fetching latest Brioche installer version..."
 
 # Get the current version number of the installer
-installer_version=$(curl --proto '=https' --tlsv1.2 -fL 'https://installer.brioche.dev/channels/stable/latest-version.txt')
+installer_version=$(curl --retry 5 --retry-delay 15 --retry-all-errors --proto '=https' --tlsv1.2 -fL 'https://installer.brioche.dev/channels/stable/latest-version.txt')
 echo
 echo "Latest brioche-installer version is: $installer_version"
 
@@ -77,8 +77,8 @@ trap 'rm -rf -- "$brioche_temp"' EXIT
 echo "Temporary directory created at $brioche_temp"
 
 # Download the install script and signature
-curl -o "$brioche_temp/install.sh" --proto '=https' --tlsv1.2 -fL "https://installer.brioche.dev/${installer_version}/install.sh"
-curl -o "$brioche_temp/install.sh.sig" --proto '=https' --tlsv1.2 -fL "https://installer.brioche.dev/${installer_version}/install.sh.sig"
+curl -o "$brioche_temp/install.sh" --retry 5 --retry-delay 15 --retry-all-errors --proto '=https' --tlsv1.2 -fL "https://installer.brioche.dev/${installer_version}/install.sh"
+curl -o "$brioche_temp/install.sh.sig" --retry 5 --retry-delay 15 --retry-all-errors --proto '=https' --tlsv1.2 -fL "https://installer.brioche.dev/${installer_version}/install.sh.sig"
 
 # Validate the signature
 ssh-keygen -Y verify \
